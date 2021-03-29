@@ -24,3 +24,46 @@ BFC(Block formatting context)直译为"块级格式化上下文"。它是一�
 4. BFC的区域不会与float box重叠。
 5. BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。
 6. 计算BFC的高度时，浮动元素也参与计算。
+
+#### 如何创建BFC
+
+* float的值不是none。
+* position的值不是static或者relatives
+* display的值是inline-block、table-cell、flex、table-caption或者inline-flex
+* overflow的值不是visible
+
+#### BFC的作用
+
+* 不和浮动元素重叠 (规则4)
+* 清除元素内部浮动 (规则6)
+* 防止垂直 margin 重叠（规则2）
+
+### 扩展
+
+#### IFC
+
+IFC(Inline Formatting Contexts)直译为"内联格式化上下文"，IFC的line box（线框）高度由其包含行内元素中最高的实际高度计算而来（不受到竖直方向的padding/margin影响)
+IFC中的line box一般左右都贴紧整个IFC，但是会因为float元素而扰乱。float元素会位于IFC与与line box之间，使得line box宽度缩短。 同个ifc下的多个line box高度会不同。 IFC中时不可能有块级元素的，当插入块级元素时（如p中插入div）会产生两个匿名块与div分隔开，即产生两个IFC，每个IFC对外表现为块级元素，与div垂直排列。
+那么IFC一般有什么用呢？
+水平居中：当一个块要在环境中水平居中时，设置其为inline-block则会在外层产生IFC，通过text-align则可以使其水平居中。
+垂直居中：创建一个IFC，用其中一个元素撑开父元素的高度，然后设置其vertical-align:middle，其他行内元素则可以在此父元素下垂直居中。
+
+#### IFC布局规则
+
+框会从包含块的顶部开始，一个接一个地水平摆放。
+摆放这些框的时候，它们在水平方向上的外边距、边框、内边距所占用的空间都会被考虑在内。在垂直方向上，这些框可能会以不同形式来对齐：它们可能会把底部或顶部对齐，也可能把其内部的文本基线对齐。能把在一行上的框都完全包含进去的一个矩形区域，被称为该行的行框。水平的margin、padding、border有效，垂直无效。不
+
+#### 创建一个IFC的环境
+
+让行框的高度是包含块的高度的100%，让行内框内部元素使用vertical-align：middle 就OK了。
+
+
+#### GFC
+
+GFC（GridLayout Formatting Contexts）为网格布局格式化上下文，当一个元素的display值设置为grid的时候，该元素就会获得一个独立的渲染区域，通俗一点就是它有自己的渲染规则。通过网格容器上定义网格定义行和网格定义列属性各在网格项目上定义网格行和网格列为每一个网格项目定义位置和空间。
+GFC的作用是什么呢？和table有什么区别？
+同样是一个二维的表格，网格有更丰富的属性来控制行列，控制对齐方式以及更加精细的渲染语义和控制。
+
+#### FFC
+
+FFC（Flex Formatting Contexts）为自适应格式化上下文，display值为flex或者inline-flex的元素会生成自适应容器，这个属性只有谷歌和火狐支持。
